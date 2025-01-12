@@ -18,7 +18,16 @@ const App = () => {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
       const json = XLSX.utils.sheet_to_json(worksheet);
-      setContacts(json);
+
+      // Add a Name field by combining First Name and Last Name
+      const processedContacts = json.map((contact) => ({
+        ...contact,
+        Name: `${contact["First Name"] || ""} ${
+          contact["Last Name"] || ""
+        }`.trim(), // Combine and trim extra spaces
+      }));
+
+      setContacts(processedContacts);
     };
 
     reader.readAsArrayBuffer(file);
