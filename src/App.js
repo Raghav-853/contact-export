@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import "./App.css";
+import image from "./image.jpeg";
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
@@ -75,6 +76,23 @@ const App = () => {
   return (
     <div className="app-container">
       <h1>Contact Selector</h1>
+      <p>
+        steps to export contacts: <br />
+        1. click on the link:{" "}
+        <a href="https://contacts.google.com/">
+          Export Contacts (click/tap here)
+        </a>{" "}
+        <br />
+        2. click on the "Export" button(Image) <br />
+        <hr />
+        <img src={image} alt="Reload the page" height="80" width="300" />
+        <br />
+        <hr />
+        3. select "Google CSV format" <br />
+        4. click on the "Export" button <br />
+        5. upload the downloaded file here
+      </p>
+      <hr />
       <input type="file" accept=".csv, .xlsx" onChange={handleFileUpload} />
 
       {contacts.length > 0 || selectedContacts.length > 0 ? (
