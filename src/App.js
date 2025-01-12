@@ -25,15 +25,16 @@ const App = () => {
   };
 
   const handleContactSelection = (contact) => {
-    setSelectedContacts((prev) =>
-      prev.includes(contact)
-        ? prev.filter((item) => item !== contact)
-        : [...prev, contact]
-    );
+    setSelectedContacts((prev) => [...prev, contact]);
+    setContacts((prev) => prev.filter((item) => item !== contact));
+  };
+
+  const handleDeselectContact = (contact) => {
+    setContacts((prev) => [...prev, contact]);
+    setSelectedContacts((prev) => prev.filter((item) => item !== contact));
   };
 
   const handleExport = () => {
-    // Map selected contacts to include only Name, Phone 1, and Phone 2
     const exportData = selectedContacts.map((contact) => ({
       Name: contact["Name"] || "Unknown",
       "Phone 1 - Value": contact["Phone 1 - Value"] || "N/A",
@@ -62,23 +63,17 @@ const App = () => {
     );
   });
 
-  const sortedContacts = [
-    ...selectedContacts,
-    ...filteredContacts.filter(
-      (contact) => !selectedContacts.includes(contact)
-    ),
-  ];
-
   return (
     <div className="app-container">
       <h1>Contact Selector</h1>
       <input type="file" accept=".csv, .xlsx" onChange={handleFileUpload} />
 
-      {contacts.length > 0 && (
+      {contacts.length > 0 || selectedContacts.length > 0 ? (
         <>
           <div className="stats-container">
             <p>
-              Selected Contacts: {selectedContacts.length} / {contacts.length}
+              Selected Contacts: {selectedContacts.length} /{" "}
+              {contacts.length + selectedContacts.length}
             </p>
             <input
               type="text"
@@ -87,38 +82,65 @@ const App = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button
-              onClick={handleExport}
-              className="export-button"
-              disabled={selectedContacts.length === 0}
-            >
-              Export Selected Contacts
-            </button>
           </div>
-          <h2>Select Contacts</h2>
-          <ul className="contact-list">
-            {sortedContacts.map((contact, index) => {
-              const name = contact["Name"] || "Unknown";
-              const phone = contact["Phone 1 - Value"] || "N/A";
-              const phone2 = contact["Phone 2 - Value"] || "N/A";
-              return (
-                <li key={index} className="contact-item">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={selectedContacts.includes(contact)}
-                      onChange={() => handleContactSelection(contact)}
-                    />
-                    <span>
-                      {name} - {phone} - {phone2}
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
+          <button
+            onClick={handleExport}
+            className="export-button"
+            disabled={selectedContacts.length === 0}
+          >
+            Export Selected Contacts
+          </button>
+          <div className="columns">
+            <div className="column">
+              <h2>Unselected Contacts</h2>
+              <ul className="contact-list">
+                {filteredContacts.map((contact, index) => {
+                  const name = contact["Name"] || "Unknown";
+                  const phone = contact["Phone 1 - Value"] || "N/A";
+                  const phone2 = contact["Phone 2 - Value"] || "N/A";
+                  return (
+                    <li key={index} className="contact-item">
+                      <label>
+                        <input
+                          type="checkbox"
+                          onChange={() => handleContactSelection(contact)}
+                        />
+                        <span>
+                          {name} - {phone} - {phone2}
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="column">
+              <h2>Selected Contacts</h2>
+              <ul className="contact-list">
+                {selectedContacts.map((contact, index) => {
+                  const name = contact["Name"] || "Unknown";
+                  const phone = contact["Phone 1 - Value"] || "N/A";
+                  const phone2 = contact["Phone 2 - Value"] || "N/A";
+                  return (
+                    <li key={index} className="contact-item">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked
+                          onChange={() => handleDeselectContact(contact)}
+                        />
+                        <span>
+                          {name} - {phone} - {phone2}
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 };
