@@ -98,11 +98,16 @@ const App = () => {
                   const name = contact["Name"] || "Unknown";
                   const phone = contact["Phone 1 - Value"] || "N/A";
                   const phone2 = contact["Phone 2 - Value"] || "N/A";
+
                   return (
-                    <li key={index} className="contact-item">
+                    <li
+                      key={`${name}-${phone}-${phone2}`}
+                      className="contact-item"
+                    >
                       <label>
                         <input
                           type="checkbox"
+                          checked={false} // Always unchecked in the unselected list
                           onChange={() => handleContactSelection(contact)}
                         />
                         <span>
@@ -121,12 +126,16 @@ const App = () => {
                   const name = contact["Name"] || "Unknown";
                   const phone = contact["Phone 1 - Value"] || "N/A";
                   const phone2 = contact["Phone 2 - Value"] || "N/A";
+
                   return (
-                    <li key={index} className="contact-item">
+                    <li
+                      key={`${name}-${phone}-${phone2}`}
+                      className="contact-item"
+                    >
                       <label>
                         <input
                           type="checkbox"
-                          checked
+                          checked={true} // Always checked in the selected list
                           onChange={() => handleDeselectContact(contact)}
                         />
                         <span>
